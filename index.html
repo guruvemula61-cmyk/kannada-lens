@@ -2,334 +2,271 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Kannada Lens - Kannada Text Digitization</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Kannada:wght@400;600;700&display=swap" rel="stylesheet">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Kannada Lens – Kannada Text Digitization</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>ಕ</text></svg>">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Kannada:wght@400;600&family=Fraunces:wght@600;800&display=swap" rel="stylesheet">
 <style>
-:root{--ink:#1f0a12;--maroon:#7a0c1e;--red:#c8102e;--gold:#f5b800;--blush:#fbeff1;--muted:#6b7280;--green:#2e7d5b;--bg:#fff;--card:#fff;--line:#eadadd}
+:root{--bg:#f6f1e7;--card:#fffdf8;--ink:#1f1b16;--mute:#6b6257;--line:#ded4c2;--brand:#b3261e;--brand-ink:#fff;--mark:#ffe08a;--ok:#1d6b3a}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#16130f;--card:#201c17;--ink:#f1ebdf;--mute:#a79d8d;--line:#3a332a;--brand:#e5574d;--brand-ink:#16130f;--mark:#6b5410;--ok:#6fcf97}}
 *{box-sizing:border-box}
-body{margin:0;font-family:"Segoe UI",Roboto,Helvetica,Arial,sans-serif;color:var(--ink);background:var(--bg);line-height:1.5}
-.kn{font-family:"Noto Sans Kannada","Nirmala UI","Tunga",sans-serif}
-header{background:var(--maroon);color:#fff;padding:22px 20px}
-.wrap{max-width:980px;margin:0 auto;padding:0 16px}
-header h1{margin:0;font-size:28px;letter-spacing:.5px}
-header p{margin:4px 0 0;color:#f3d9de}
-.badge{display:inline-block;background:var(--gold);color:var(--ink);font-weight:700;font-size:12px;padding:3px 10px;border-radius:99px;margin-bottom:8px}
-main{padding:20px 0 60px}
-.panel{background:var(--blush);border-radius:14px;padding:16px;margin-bottom:18px}
+html,body{margin:0}
+body{background:var(--bg);color:var(--ink);font:16px/1.55 "Noto Sans Kannada",system-ui,sans-serif;padding:env(safe-area-inset-top,0) 0 env(safe-area-inset-bottom,0)}
+.wrap{max-width:900px;margin:0 auto;padding:20px 16px 60px}
+h1{font:800 clamp(2rem,6vw,3.2rem)/1.1 Fraunces,Georgia,serif;margin:8px 0 4px}
+h1 .kn{color:var(--brand);font-family:"Noto Sans Kannada",sans-serif}
+.sub{color:var(--mute);margin:0 0 20px;max-width:60ch}
+.card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:16px;margin:14px 0}
+label{font-weight:600;display:block;margin-bottom:6px}
+input[type=password],input[type=text]{width:100%;padding:10px;border:1px solid var(--line);border-radius:6px;background:var(--bg);color:var(--ink);font:inherit}
 .row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
-label{font-weight:600;font-size:14px}
-input[type=password],input[type=text],select{padding:10px 12px;border:1px solid var(--line);border-radius:10px;font-size:14px;background:#fff;min-width:0}
-input.grow{flex:1 1 260px}
-button,.btn{background:var(--red);color:#fff;border:0;border-radius:10px;padding:10px 16px;font-weight:600;font-size:14px;cursor:pointer}
-button.alt,.btn.alt{background:#fff;color:var(--maroon);border:1px solid var(--line)}
-button:disabled{opacity:.55;cursor:not-allowed}
-small,.hint{color:var(--muted);font-size:12.5px}
-.tabs{display:flex;gap:6px;margin-bottom:14px;border-bottom:2px solid var(--line)}
-.tab{background:none;color:var(--muted);border-radius:10px 10px 0 0;padding:10px 16px}
-.tab.on{color:var(--maroon);border-bottom:3px solid var(--red);margin-bottom:-2px}
-.drop{border:2px dashed #d9aab3;border-radius:14px;padding:26px;text-align:center;background:#fff;cursor:pointer}
-.drop.over{background:var(--blush)}
-.thumbs{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
-.thumbs span{background:#fff;border:1px solid var(--line);border-radius:99px;padding:4px 10px;font-size:12.5px}
-.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px;margin:16px 0;box-shadow:0 2px 8px rgba(0,0,0,.06)}
-.card h3{margin:0 0 10px;font-size:17px;color:var(--maroon)}
-.meta{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px}
-.chip{background:var(--blush);color:var(--maroon);border-radius:99px;padding:3px 10px;font-size:12px;font-weight:600}
-.chip.high{background:#dff3e9;color:var(--green)}.chip.low{background:#fde2e2;color:#a31212}
-.grid{display:grid;grid-template-columns:1fr 1.3fr;gap:16px}
-@media(max-width:720px){.grid{grid-template-columns:1fr}}
-.grid img{width:100%;border-radius:10px;border:1px solid var(--line)}
-textarea{width:100%;min-height:150px;border:1px solid var(--line);border-radius:10px;padding:10px;font-size:17px;resize:vertical}
-.sub{display:flex;gap:6px;margin:12px 0 6px;flex-wrap:wrap}
-.sub button{background:#fff;color:var(--maroon);border:1px solid var(--line);padding:6px 12px}
-.sub button.on{background:var(--maroon);color:#fff}
-.out{background:var(--blush);border-radius:10px;padding:12px;white-space:pre-wrap;min-height:48px}
-.note{background:#fff7dd;border-left:4px solid var(--gold);padding:8px 12px;border-radius:6px;margin-top:10px;font-size:14px}
-.err{background:#fde2e2;border-left:4px solid var(--red);padding:10px 12px;border-radius:6px;margin:10px 0;font-size:14px}
-mark{background:var(--gold);padding:0 2px;border-radius:3px}
-details{border:1px solid var(--line);border-radius:10px;padding:10px 12px;margin:8px 0}
-summary{cursor:pointer;font-weight:600}
-.hidden{display:none}
-.spin{display:inline-block;width:14px;height:14px;border:2px solid #fff;border-top-color:transparent;border-radius:50%;animation:s .8s linear infinite;vertical-align:-2px;margin-right:6px}
-@keyframes s{to{transform:rotate(360deg)}}
+button,.btn{background:var(--brand);color:var(--brand-ink);border:0;border-radius:6px;padding:10px 16px;font:600 15px inherit;font-family:inherit;cursor:pointer;display:inline-block}
+button.sec,.btn.sec{background:transparent;color:var(--ink);border:1px solid var(--line)}
+button:disabled{opacity:.5;cursor:wait}
+:focus-visible{outline:3px solid var(--brand);outline-offset:2px}
+input[type=file]{display:none}
+.tabs{display:flex;gap:4px;border-bottom:1px solid var(--line);margin-top:18px}
+.tab{background:none;color:var(--mute);border-radius:6px 6px 0 0;border:1px solid transparent;border-bottom:0}
+.tab[aria-selected=true]{color:var(--ink);background:var(--card);border-color:var(--line)}
+.panel[hidden]{display:none}
+.thumbs{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+.thumbs span{font-size:13px;border:1px solid var(--line);border-radius:6px;padding:4px 8px;color:var(--mute)}
+.res h3{margin:0 0 4px;font-size:1.1rem}
+.meta{color:var(--mute);font-size:14px;margin-bottom:10px}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+@media(max-width:640px){.grid{grid-template-columns:1fr}}
+.res img{max-width:100%;border-radius:6px;border:1px solid var(--line)}
+.kn-text{white-space:pre-wrap;font-size:1.2rem;line-height:1.8;background:var(--bg);border-radius:6px;padding:12px;max-height:260px;overflow:auto}
+.sec-title{font-weight:600;margin:12px 0 2px}
+.kw span{display:inline-block;background:var(--bg);border:1px solid var(--line);border-radius:99px;padding:2px 10px;margin:2px 4px 2px 0;font-size:14px}
+.note{border-left:4px solid var(--brand);padding:6px 10px;background:var(--bg);margin-top:10px}
+mark{background:var(--mark);color:inherit;padding:0 2px}
+.err{color:var(--brand);font-weight:600}
+.empty{color:var(--mute);text-align:center;padding:24px}
 </style>
 </head>
 <body>
-<header><div class="wrap">
-  <span class="badge">Kannada Digital Innovation Hackathon 2026 · Problem Statement 5</span>
-  <h1>Kannada Lens</h1>
-  <p>Turn Kannada signboards, scanned pages and handwriting into searchable text with Roman reading and English meaning.</p>
-</div></header>
+<div class="wrap">
+  <h1><span class="kn">ಕನ್ನಡ</span> Lens</h1>
+  <p class="sub">Photograph a Kannada signboard, scanned page or handwritten note. Get editable Kannada text, how to read it, and what it means in English.</p>
 
-<main class="wrap">
-  <section class="panel">
-    <div class="row">
-      <label for="key">Gemini API key</label>
-      <input id="key" class="grow" type="password" placeholder="Paste your free key (starts with AIza...)" autocomplete="off">
-      <button id="saveKey" class="alt" type="button">Save in this browser</button>
-    </div>
-    <p class="hint" style="margin:8px 0 0">Get a free key at <a href="https://aistudio.google.com/apikey" target="_blank" rel="noopener">aistudio.google.com/apikey</a>. The key stays in your browser and is sent only to Google's Gemini API.</p>
-  </section>
+  <div class="card">
+    <label for="key">Gemini API key</label>
+    <input id="key" type="password" placeholder="Paste your key (starts with AIza…)" autocomplete="off">
+    <p class="meta" style="margin:6px 0 0">Free key at aistudio.google.com/apikey. It stays in your browser and is sent only to Google.</p>
+  </div>
 
-  <nav class="tabs" role="tablist">
-    <button class="tab on" data-tab="scan" type="button">Digitize</button>
-    <button class="tab" data-tab="search" type="button">Search</button>
-    <button class="tab" data-tab="lib" type="button">Library (<span id="count">0</span>)</button>
-  </nav>
+  <div class="tabs" role="tablist">
+    <button class="tab" role="tab" aria-selected="true" data-p="scan">Digitize</button>
+    <button class="tab" role="tab" aria-selected="false" data-p="search">Search</button>
+    <button class="tab" role="tab" aria-selected="false" data-p="lib">Library</button>
+  </div>
 
-  <!-- Digitize -->
-  <section id="tab-scan">
-    <div id="drop" class="drop">
-      <strong>Drop images or PDFs here, or click to choose</strong><br>
-      <small>PNG, JPG, WEBP or PDF. On a phone you can also take a photo.</small>
-      <input id="file" type="file" accept="image/*,application/pdf" multiple class="hidden">
+  <section id="scan" class="panel">
+    <div class="card">
+      <div class="row">
+        <label class="btn sec" for="f1" style="margin:0">Choose image or PDF</label>
+        <label class="btn sec" for="f2" style="margin:0">Use camera</label>
+        <button id="go" disabled>Digitize</button>
+      </div>
+      <input id="f1" type="file" accept="image/*,application/pdf" multiple>
+      <input id="f2" type="file" accept="image/*" capture="environment">
+      <div id="thumbs" class="thumbs"></div>
+      <p id="status" class="meta" role="status"></p>
     </div>
-    <div id="thumbs" class="thumbs"></div>
-    <div class="row" style="margin-top:12px">
-      <button id="go" type="button">Digitize</button>
-      <button id="clear" class="alt" type="button">Clear selection</button>
-      <label class="row" style="gap:6px;margin-left:auto"><small>Model</small>
-        <select id="model">
-          <option value="gemini-2.5-flash" selected>gemini-2.5-flash</option>
-          <option value="gemini-2.5-pro">gemini-2.5-pro</option>
-          <option value="gemini-2.0-flash">gemini-2.0-flash</option>
-        </select>
-      </label>
-    </div>
-    <div id="msg"></div>
     <div id="results"></div>
   </section>
 
-  <!-- Search -->
-  <section id="tab-search" class="hidden">
-    <input id="q" type="text" class="grow" style="width:100%" placeholder="Search words in Kannada, Roman letters or English">
-    <p id="qinfo" class="hint"></p>
+  <section id="search" class="panel" hidden>
+    <div class="card">
+      <label for="q">Search in Kannada, Roman letters or English</label>
+      <input id="q" type="text" placeholder="e.g. ಬಸ್, bus, temple">
+    </div>
     <div id="hits"></div>
   </section>
 
-  <!-- Library -->
-  <section id="tab-lib" class="hidden">
-    <div class="row"><button id="export" class="alt" type="button">Export all as JSON</button></div>
-    <div id="lib"></div>
+  <section id="lib" class="panel" hidden>
+    <div class="card row"><button id="exp" class="sec">Export all as JSON</button><button id="clr" class="sec">Clear library</button><span id="count" class="meta"></span></div>
+    <div id="libList"></div>
   </section>
-</main>
+</div>
 
 <script>
-(function () {
-  "use strict";
-  var PROMPT = [
-    "You are an expert Kannada OCR and language assistant.",
-    "Read ALL Kannada (and any English) text in the attached image or document.",
-    "Return ONLY valid JSON with exactly these keys:",
-    "{",
-    '  "document_type": "printed | handwritten | signboard | scanned page | other",',
-    '  "kannada_text": "full extracted text in Kannada script, keep line breaks as \\n",',
-    '  "transliteration": "Roman (English letters) reading of the Kannada text, line by line",',
-    '  "english_translation": "natural English translation",',
-    '  "simple_explanation": "2-3 simple sentences about what this text is and where it is used",',
-    '  "keywords": ["5-10 important Kannada words from the text"],',
-    '  "confidence": "high | medium | low",',
-    '  "notes": "mention unclear or damaged parts, or empty string"',
-    "}",
-    "Do not invent text that is not visible. If no Kannada text is found, say so in notes and leave kannada_text empty."
-  ].join("\n");
+const MODELS = ["gemini-3.8-flash", "gemini-3.7-flash"]; // tried in order
+const PROMPT = `You are an expert Kannada OCR and language assistant.
+Read ALL Kannada (and any English) text in the attached image/document.
+Return ONLY valid JSON with exactly these keys:
+{"document_type":"printed | handwritten | signboard | scanned page | other",
+"kannada_text":"full extracted text in Kannada script, keep line breaks as \\n",
+"transliteration":"Roman (English letters) reading of the Kannada text, line by line",
+"english_translation":"natural English translation",
+"simple_explanation":"2-3 simple sentences explaining what this text is about / where it is used",
+"keywords":["5-10 important Kannada words from the text"],
+"confidence":"high | medium | low",
+"notes":"mention unclear/damaged parts, or empty string"}
+Do not invent text that is not visible. If no Kannada text is found, say so in notes and leave kannada_text empty.`;
 
-  var $ = function (s) { return document.querySelector(s); };
-  var docs = [], picked = [];
+const $ = id => document.getElementById(id);
+let pending = [];           // {name, mime, b64, url}
+let docs = [];              // results (kept in memory + localStorage without images)
 
-  // ---- key storage (guarded) ----
-  try { var k = localStorage.getItem("kl_key"); if (k) $("#key").value = k; } catch (e) {}
-  $("#saveKey").onclick = function () {
-    try { localStorage.setItem("kl_key", $("#key").value.trim()); $("#saveKey").textContent = "Saved"; }
-    catch (e) { $("#saveKey").textContent = "Browser blocked saving"; }
-    setTimeout(function () { $("#saveKey").textContent = "Save in this browser"; }, 1500);
-  };
+// ---- safe storage ----
+const store = {
+  get(k){ try { return localStorage.getItem(k) } catch(e){ return null } },
+  set(k,v){ try { localStorage.setItem(k,v) } catch(e){} }
+};
+$("key").value = store.get("kl_key") || "";
+$("key").addEventListener("change", e => store.set("kl_key", e.target.value.trim()));
+try { docs = JSON.parse(store.get("kl_docs") || "[]") } catch(e){ docs = [] }
 
-  // ---- tabs ----
-  document.querySelectorAll(".tab").forEach(function (t) {
-    t.onclick = function () {
-      document.querySelectorAll(".tab").forEach(function (x) { x.classList.toggle("on", x === t); });
-      ["scan", "search", "lib"].forEach(function (n) { $("#tab-" + n).classList.toggle("hidden", n !== t.dataset.tab); });
-      if (t.dataset.tab === "lib") renderLib();
-    };
+// ---- tabs ----
+document.querySelectorAll(".tab").forEach(t => t.onclick = () => {
+  document.querySelectorAll(".tab").forEach(x => x.setAttribute("aria-selected", x === t));
+  document.querySelectorAll(".panel").forEach(p => p.hidden = p.id !== t.dataset.p);
+  if (t.dataset.p === "lib") renderLib();
+  if (t.dataset.p === "search") renderHits();
+});
+
+// ---- files ----
+function toB64(file){
+  return new Promise((res, rej) => {
+    const r = new FileReader();
+    r.onload = () => res(r.result.split(",")[1]);
+    r.onerror = () => rej(new Error("Could not read file"));
+    r.readAsDataURL(file);
   });
+}
+async function addFiles(list){
+  for (const f of list){
+    const mime = f.type || (f.name.toLowerCase().endsWith(".pdf") ? "application/pdf" : "image/jpeg");
+    pending.push({ name: f.name || "camera.jpg", mime, b64: await toB64(f), url: mime.startsWith("image") ? URL.createObjectURL(f) : null });
+  }
+  $("thumbs").replaceChildren(...pending.map(p => Object.assign(document.createElement("span"), { textContent: p.name })));
+  $("go").disabled = !pending.length;
+}
+$("f1").onchange = e => { addFiles([...e.target.files]); e.target.value = ""; };
+$("f2").onchange = e => { addFiles([...e.target.files]); e.target.value = ""; };
 
-  // ---- file picking ----
-  var drop = $("#drop"), fileIn = $("#file");
-  drop.onclick = function () { fileIn.click(); };
-  ["dragover", "dragenter"].forEach(function (ev) { drop.addEventListener(ev, function (e) { e.preventDefault(); drop.classList.add("over"); }); });
-  ["dragleave", "drop"].forEach(function (ev) { drop.addEventListener(ev, function (e) { e.preventDefault(); drop.classList.remove("over"); }); });
-  drop.addEventListener("drop", function (e) { addFiles(e.dataTransfer.files); });
-  fileIn.onchange = function () { addFiles(fileIn.files); fileIn.value = ""; };
-  $("#clear").onclick = function () { picked = []; showThumbs(); };
-  function addFiles(list) {
-    Array.prototype.forEach.call(list, function (f) {
-      if (/^image\//.test(f.type) || /\.pdf$/i.test(f.name)) picked.push(f);
-    });
-    showThumbs();
-  }
-  function showThumbs() {
-    var box = $("#thumbs"); box.textContent = "";
-    picked.forEach(function (f) { var s = document.createElement("span"); s.textContent = f.name; box.appendChild(s); });
-  }
-
-  // ---- helpers ----
-  function toB64(file) {
-    return new Promise(function (res, rej) {
-      var r = new FileReader();
-      r.onload = function () { res(String(r.result).split(",")[1]); };
-      r.onerror = function () { rej(new Error("Could not read file")); };
-      r.readAsDataURL(file);
-    });
-  }
-  function el(tag, cls, text) { var e = document.createElement(tag); if (cls) e.className = cls; if (text != null) e.textContent = text; return e; }
-  function showMsg(text, isErr) {
-    var m = $("#msg"); m.textContent = "";
-    if (text) m.appendChild(el("div", isErr ? "err" : "hint", text));
-  }
-
-  async function digitize(file, key, model) {
-    var mime = file.type || (/\.pdf$/i.test(file.name) ? "application/pdf" : "image/jpeg");
-    var data = await toB64(file);
-    var url = "https://generativelanguage.googleapis.com/v1beta/models/" + encodeURIComponent(model) + ":generateContent";
-    var resp = await fetch(url, {
+// ---- Gemini ----
+async function digitize(p, key){
+  let lastErr;
+  for (const model of MODELS){
+    const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${encodeURIComponent(key)}`;
+    const r = await fetch(url, {
       method: "POST",
-      headers: { "Content-Type": "application/json", "x-goog-api-key": key },
+      headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
-        contents: [{ parts: [{ inline_data: { mime_type: mime, data: data } }, { text: PROMPT }] }],
-        generationConfig: { responseMimeType: "application/json", temperature: 0.1 }
+        contents: [{ parts: [{ inline_data: { mime_type: p.mime, data: p.b64 } }, { text: PROMPT }] }],
+        generationConfig: { responseMimeType: "application/json" }
       })
     });
-    var j = await resp.json().catch(function () { return {}; });
-    if (!resp.ok) {
-      var m = (j.error && j.error.message) || ("HTTP " + resp.status);
-      if (resp.status === 400 || resp.status === 403) m = "API key problem: " + m;
-      if (resp.status === 429) m = "Rate limit reached. Wait a minute and try again. " + m;
-      throw new Error(m);
+    const j = await r.json();
+    if (r.ok){
+      const t = (j.candidates?.[0]?.content?.parts?.[0]?.text || "").replace(/^```json|```$/g, "").trim();
+      return JSON.parse(t);
     }
-    var parts = j.candidates && j.candidates[0] && j.candidates[0].content && j.candidates[0].content.parts;
-    var text = (parts || []).map(function (p) { return p.text || ""; }).join("").trim();
-    text = text.replace(/^```json/i, "").replace(/```$/, "").trim();
-    var out;
-    try { out = JSON.parse(text); } catch (e) { throw new Error("The model did not return valid JSON. Try again."); }
-    var preview = mime.indexOf("image/") === 0 ? "data:" + mime + ";base64," + data : null;
-    return Object.assign({ name: file.name, time: new Date().toLocaleString(), preview: preview }, out);
+    lastErr = new Error(j.error?.message || "API error " + r.status);
+    // only try the next model when this one is unavailable
+    if (![404, 400].includes(r.status) && !/no longer available|not found|not supported/i.test(lastErr.message)) break;
   }
+  throw lastErr;
+}
 
-  $("#go").onclick = async function () {
-    var key = $("#key").value.trim();
-    if (!key) { showMsg("Please paste your Gemini API key first.", true); return; }
-    if (!picked.length) { showMsg("Choose at least one image or PDF.", true); return; }
-    var btn = $("#go"); btn.disabled = true;
-    var files = picked.slice(); picked = []; showThumbs(); showMsg("");
-    for (var i = 0; i < files.length; i++) {
-      btn.textContent = "";
-      btn.appendChild(el("span", "spin")); btn.appendChild(document.createTextNode("Reading " + (i + 1) + " of " + files.length + "..."));
-      try {
-        var d = await digitize(files[i], key, $("#model").value);
-        docs.unshift(d);
-        $("#results").prepend(renderDoc(d));
-        $("#count").textContent = docs.length;
-      } catch (e) {
-        var box = el("div", "err", files[i].name + ": " + e.message);
-        $("#results").prepend(box);
-      }
+$("go").onclick = async () => {
+  const key = $("key").value.trim();
+  store.set("kl_key", key);
+  if (!key){ $("status").innerHTML = '<span class="err">Add your Gemini API key above first.</span>'; return; }
+  $("go").disabled = true;
+  const batch = pending; pending = []; $("thumbs").replaceChildren();
+  for (const p of batch){
+    $("status").textContent = "Reading " + p.name + " …";
+    try {
+      const r = await digitize(p, key);
+      const d = { id: Date.now() + Math.random(), name: p.name, time: new Date().toLocaleString(), img: p.url, ...r };
+      docs.unshift(d);
+      save();
+      renderResult(d, true);
+    } catch(e){
+      const s = document.createElement("div"); s.className = "card err"; s.textContent = p.name + ": " + e.message;
+      $("results").prepend(s);
     }
-    btn.disabled = false; btn.textContent = "Digitize";
-  };
-
-  // ---- render ----
-  function renderDoc(d) {
-    var card = el("div", "card");
-    card.appendChild(el("h3", null, d.name));
-    var meta = el("div", "meta");
-    meta.appendChild(el("span", "chip", d.document_type || "document"));
-    var conf = String(d.confidence || "").toLowerCase();
-    meta.appendChild(el("span", "chip " + (conf === "high" ? "high" : conf === "low" ? "low" : ""), "Confidence: " + (d.confidence || "n/a")));
-    card.appendChild(meta);
-
-    var grid = el("div", "grid");
-    if (d.preview) { var img = document.createElement("img"); img.src = d.preview; img.alt = "Uploaded " + d.name; grid.appendChild(img); }
-    var right = el("div");
-    right.appendChild(el("label", null, "Kannada text"));
-    var ta = el("textarea", "kn"); ta.value = d.kannada_text || ""; ta.readOnly = true; right.appendChild(ta);
-    var r2 = el("div", "row"); r2.style.marginTop = "8px";
-    var cp = el("button", "alt", "Copy text"); cp.type = "button";
-    cp.onclick = function () { (navigator.clipboard ? navigator.clipboard.writeText(ta.value) : Promise.reject()).then(function () { cp.textContent = "Copied"; }, function () { ta.select(); }); setTimeout(function () { cp.textContent = "Copy text"; }, 1500); };
-    var dl = el("button", "alt", "Download .txt"); dl.type = "button";
-    dl.onclick = function () { download(d.name.replace(/\.[^.]+$/, "") + "_kannada.txt", d.kannada_text || "", "text/plain"); };
-    r2.appendChild(cp); r2.appendChild(dl); right.appendChild(r2);
-    grid.appendChild(right); card.appendChild(grid);
-
-    var sub = el("div", "sub"), out = el("div", "out");
-    var views = [["Reading (Roman)", d.transliteration], ["English", d.english_translation], ["Explanation", d.simple_explanation]];
-    views.forEach(function (v, i) {
-      var b = el("button", i === 1 ? "on" : "", v[0]); b.type = "button";
-      b.onclick = function () { Array.prototype.forEach.call(sub.children, function (x) { x.classList.remove("on"); }); b.classList.add("on"); out.textContent = v[1] || ""; };
-      sub.appendChild(b);
-    });
-    out.textContent = d.english_translation || "";
-    card.appendChild(sub); card.appendChild(out);
-    if (d.keywords && d.keywords.length) { var kw = el("p", "kn", "Keywords: " + d.keywords.join(" · ")); kw.style.marginTop = "10px"; card.appendChild(kw); }
-    if (d.notes) card.appendChild(el("div", "note", d.notes));
-    return card;
   }
+  $("status").textContent = "Done. Results are saved in Search and Library.";
+};
 
-  function download(name, text, type) {
-    var a = document.createElement("a");
-    a.href = URL.createObjectURL(new Blob([text], { type: type + ";charset=utf-8" }));
-    a.download = name; document.body.appendChild(a); a.click(); a.remove();
-  }
+function save(){
+  store.set("kl_docs", JSON.stringify(docs.map(({ img, ...rest }) => rest)));
+}
 
-  // ---- search ----
-  function escRe(s) { return s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"); }
-  function marked(text, q) {
-    var frag = document.createDocumentFragment();
-    var parts = text.split(new RegExp("(" + escRe(q) + ")", "i"));
-    parts.forEach(function (p) {
-      if (p.toLowerCase() === q.toLowerCase()) frag.appendChild(el("mark", null, p)); else frag.appendChild(document.createTextNode(p));
-    });
-    return frag;
-  }
-  $("#q").oninput = function () {
-    var q = this.value.trim(), box = $("#hits"); box.textContent = "";
-    if (!docs.length) { $("#qinfo").textContent = "Digitize a document first, then search here."; return; }
-    if (!q) { $("#qinfo").textContent = ""; return; }
-    var n = 0;
-    docs.forEach(function (d) {
-      var f = [["Kannada", d.kannada_text], ["Reading", d.transliteration], ["English", d.english_translation]];
-      var card = null;
-      f.forEach(function (pair) {
-        String(pair[1] || "").split(/\n/).forEach(function (line) {
-          if (line.toLowerCase().indexOf(q.toLowerCase()) > -1) {
-            if (!card) { card = el("div", "card"); card.appendChild(el("h3", null, d.name)); box.appendChild(card); n++; }
-            var p = el("p", pair[0] === "Kannada" ? "kn" : ""); p.appendChild(el("small", null, pair[0] + ": ")); p.appendChild(marked(line, q)); card.appendChild(p);
-          }
-        });
-      });
-    });
-    $("#qinfo").textContent = n ? n + " document(s) matched." : "No matches found.";
-  };
+// ---- rendering (textContent only, so model output can't inject HTML) ----
+function el(tag, props = {}, ...kids){
+  const e = Object.assign(document.createElement(tag), props);
+  kids.forEach(k => e.append(k));
+  return e;
+}
+function dl(name, text, type = "text/plain"){
+  const a = el("a", { href: URL.createObjectURL(new Blob([text], { type: type + ";charset=utf-8" })), download: name });
+  a.click(); URL.revokeObjectURL(a.href);
+}
+function renderResult(d, prepend){
+  const kw = el("div", { className: "kw" }, ...(d.keywords || []).map(k => el("span", { textContent: k })));
+  const left = d.img ? el("div", {}, el("img", { src: d.img, alt: d.name })) : el("div", { className: "meta", textContent: "PDF – preview not shown" });
+  const copy = el("button", { className: "sec", textContent: "Copy Kannada text" });
+  copy.onclick = async () => { try { await navigator.clipboard.writeText(d.kannada_text || ""); copy.textContent = "Copied"; } catch(e){ copy.textContent = "Copy failed"; } };
+  const txt = el("button", { className: "sec", textContent: "Download .txt" });
+  txt.onclick = () => dl(d.name.replace(/\.[^.]+$/, "") + "_kannada.txt", d.kannada_text || "");
+  const card = el("div", { className: "card res" },
+    el("h3", { textContent: d.name }),
+    el("div", { className: "meta", textContent: `${d.document_type || ""} · confidence: ${d.confidence || "n/a"}` }),
+    el("div", { className: "grid" }, left,
+      el("div", {}, el("div", { className: "sec-title", textContent: "Kannada text" }), el("div", { className: "kn-text", textContent: d.kannada_text || "(no text found)" }))),
+    el("div", { className: "sec-title", textContent: "How to read it" }), el("div", { textContent: d.transliteration || "" }),
+    el("div", { className: "sec-title", textContent: "English" }), el("div", { textContent: d.english_translation || "" }),
+    el("div", { className: "sec-title", textContent: "What it is" }), el("div", { textContent: d.simple_explanation || "" }),
+    el("div", { className: "sec-title", textContent: "Keywords" }), kw,
+    d.notes ? el("div", { className: "note", textContent: d.notes }) : "",
+    el("div", { className: "row", style: "margin-top:12px" }, copy, txt));
+  $("results")[prepend ? "prepend" : "append"](card);
+}
 
-  // ---- library ----
-  function renderLib() {
-    var box = $("#lib"); box.textContent = "";
-    if (!docs.length) { box.appendChild(el("p", "hint", "Nothing here yet.")); return; }
-    docs.forEach(function (d) {
-      var de = document.createElement("details");
-      de.appendChild(el("summary", null, d.name + " (" + d.time + ")"));
-      de.appendChild(el("p", "kn", d.kannada_text || ""));
-      de.appendChild(el("small", null, d.english_translation || ""));
-      box.appendChild(de);
-    });
-  }
-  $("#export").onclick = function () {
-    var data = docs.map(function (d) { var c = Object.assign({}, d); delete c.preview; return c; });
-    download("kannada_lens_library.json", JSON.stringify(data, null, 2), "application/json");
-  };
-})();
+// ---- search ----
+const esc = s => s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+function hl(line, q){
+  const frag = document.createDocumentFragment();
+  line.split(new RegExp("(" + esc(q) + ")", "i")).forEach(part => {
+    frag.append(part.toLowerCase() === q.toLowerCase() ? el("mark", { textContent: part }) : document.createTextNode(part));
+  });
+  return frag;
+}
+function renderHits(){
+  const q = $("q").value.trim(), out = $("hits");
+  out.replaceChildren();
+  if (!docs.length){ out.append(el("div", { className: "empty", textContent: "Digitize a document first, then search it here." })); return; }
+  if (!q) return;
+  let n = 0;
+  docs.forEach(d => {
+    const fields = { Kannada: d.kannada_text, Reading: d.transliteration, English: d.english_translation };
+    const lines = [];
+    for (const [k, v] of Object.entries(fields))
+      (v || "").split("\n").forEach(l => { if (l.toLowerCase().includes(q.toLowerCase())) lines.push(el("div", {}, el("b", { textContent: k + ": " }), hl(l, q))); });
+    if (lines.length){ n++; out.append(el("div", { className: "card" }, el("h3", { textContent: d.name }), el("div", { className: "meta", textContent: d.time }), ...lines)); }
+  });
+  if (!n) out.append(el("div", { className: "empty", textContent: "No matches. Try another spelling or an English word." }));
+}
+$("q").oninput = renderHits;
+
+// ---- library ----
+function renderLib(){
+  $("count").textContent = docs.length + " document" + (docs.length === 1 ? "" : "s");
+  const out = $("libList"); out.replaceChildren();
+  if (!docs.length){ out.append(el("div", { className: "empty", textContent: "Nothing saved yet. Digitize a document to start your library." })); return; }
+  docs.forEach(d => out.append(el("details", { className: "card" },
+    el("summary", { textContent: d.name + " – " + d.time }),
+    el("div", { className: "kn-text", textContent: d.kannada_text || "" }),
+    el("div", { className: "meta", textContent: d.english_translation || "" }))));
+}
+$("exp").onclick = () => dl("kannada_lens_library.json", JSON.stringify(docs.map(({ img, ...r }) => r), null, 2), "application/json");
+$("clr").onclick = () => { if (confirm("Delete all saved documents?")){ docs = []; save(); renderLib(); } };
 </script>
 </body>
 </html>
